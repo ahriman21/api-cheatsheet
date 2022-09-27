@@ -25,4 +25,20 @@ request.method		 # ==> diagnose the method that user used
 
 
 # ====================================================
-# ---
+# ---SERIAIZERS 
+## Serialzers allow complex data such as querysets and model instances to be converted to native python .(similar to forms in django)
+# > serializers.py
+from rest_framework import serializers
+class PersonSerializer(serializers.Serializer):
+	name = serializers.CharField()
+	national_id = serializers.CharField()
+# > views.py
+class PersonView(APIView):
+	def get(self,request):
+		people = Person.objects.all()
+		serializerd_data = PersonSerializer(instance = people).data
+		return Response( {'people':serializerd_data}, many=True )
+	
+#====================================================
+		
+
