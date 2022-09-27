@@ -8,7 +8,7 @@ def get_list(request)
 class GetList(APIView):
 	def get(self,request):
 		return Response({'name':name})
-# ====================================================
+# =======================RESPONSE=============================
 # ---RESPONSE
 ## return a response to user after his/her request (Response is as similar as Render in django)
 from rest_framework.response import Response
@@ -16,7 +16,7 @@ def get_list(request)
 	data = { 'name' = 'pouria' }
     return Response(data)
 
-# ====================================================
+# ======================REQUEST==============================
 # --- REQUEST
 request.data 		 # ==> access to the data that user entered
 request.query_params # ==> access to the data in url parameters (similar to request.GET in django)
@@ -24,7 +24,7 @@ request.user  		 # ==> access to user information
 request.method		 # ==> diagnose the method that user used
 
 
-# ====================================================
+# =======================SERIALIZERS=============================
 # ---SERIAIZERS 
 ## Serialzers allow complex data such as querysets and model instances to be converted to native python .(similar to forms in django)
 # > serializers.py
@@ -39,6 +39,19 @@ class PersonView(APIView):
 		serializerd_data = PersonSerializer(instance = people).data
 		return Response( {'people':serializerd_data}, many=True )
 	
-#====================================================
-		
+#=========================POST===========================
+### POST method 
+@api_view()
+from .forms import RegisterSerializer
+def post(self,request):
+	serialized_data = RegisterSerializer(data = request.POST)
+	if serialized_data.is_valid():
+		User.objects.create_user(
+			email = serialized_data.validated_data['email'], # ==> validated_data is as same as cleaned_data in django*
+			password = serialized_data.validated_data['password']
+		)
+		return Response(serialized_data.data) # if you wanna hide password while sending data to user you must use '''write_only = True''' in serializers*
+	return Response(serialized_data.errors)
+
+# =========================================================
 
