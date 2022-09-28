@@ -38,6 +38,16 @@ class PersonView(APIView):
 		people = Person.objects.all()
 		serializerd_data = PersonSerializer(instance = people).data
 		return Response( {'people':serializerd_data}, many=True )
+# 
+## model serializers :
+class PersonSerializer(serializers.ModelSerializer):
+	model = Person
+	fields = ['id','name','national_id']
+# 	excludes= ['x'] # if you want all fields except one thing you can just use 'excludes' instead of 'fields'*
+	extra_kwargs = {
+		national_id :{write_only :True, required:True},
+		name : { required : True }
+	}
 	
 #=========================POST===========================
 ### POST method 
@@ -68,10 +78,26 @@ def validate(self,data):
 	return data
 
 
+# =============================overwriting create() and update()=============================================
+# how to overwrite create and update methods in serializers :
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.content = validated_data.get('content', instance.content)
+        instance.created = validated_data.get('created', instance.created)
+        return instance
+# 
+    def create(self, validated_data):
+        user = User(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
+# > in views.py
+serialized_data.create(serialized_data.validated_data)
 
-
-
-
+# =======================================================================================
 
 
