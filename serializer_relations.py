@@ -1,10 +1,10 @@
 # 1- we can create a serializer for a model and use it in another serializer :
-UserSerializer(serializers.Serializer):
+class UserSerializer(serializers.Serializer):
 	username = serializers.CharField()
 	email = serializer.EmailField()
 
 	
-QuestionSerializer(serializers.Serializer):
+class QuestionSerializer(serializers.Serializer):
 	user = UserSerializer(read_only = True)
 # 
 	model = Question
@@ -12,7 +12,7 @@ QuestionSerializer(serializers.Serializer):
 	
 # 2- or we can use another way to access to other columns of User table :
 
-QuestionSerializer(serializers.Serializer):
+class QuestionSerializer(serializers.Serializer):
 	user = serializers.SlugRelatedField(slug_field = 'email')
 # 	
 	model = Question
@@ -26,7 +26,12 @@ serializers.StringRelatedField()
 
 
 # 3- this way is when you have a relation that is list[] or tuple(). for example a list of answers for a question :
-QuestionSerializer(serializers.Serializer):
+class AnswerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Answer
+		fields = '__all__'
+		
+class QuestionSerializer(serializers.Serializer):
 	answers = serializers.SerializerMethodField()
 # 	
 	model = Question
