@@ -53,5 +53,25 @@ def post(self,request):
 		return Response(serialized_data.data) # if you wanna hide password while sending data to user you must use '''write_only = True''' in serializers*
 	return Response(serialized_data.errors)
 
-# =========================================================
+# =======================VALIDATIONs==================================
+## how to validate serizalizer fields
+
+# validate a specific field :
+def validate_email(self,value):
+	if 'admin' is in value :
+		raise serializers.ValidationError('you can not use admin in your email')
+	return value
+# validate multiple fields in same time :
+def validate(self,data):
+	if data['password1'] not data['password2'] :
+		raise serializers.ValidationError('passwords must match together')
+	return data
+
+
+
+
+
+
+
+
 
