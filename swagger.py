@@ -51,3 +51,22 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
     ## option 2
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
+# ==================================================================================================
+# 4- if you wanna have descriptions in your auto-created documentation you can go to 
+##your api class-base-view and write your descriptions in doc strings like this :
+class UserRegisterView(APIView):
+    """ this endpoint is used to create and register new users  """
+    
+# 5- somethimes swagger can not recegnaize your serializer 
+##and doesn't mention parameters and argumans for this you can do this :
+class UserRegisterView(APIView):
+    serializer_class = UserRegisterSerializer   
+    ...
+# ==================================================================================================
+
+
+
+
+
+
+
