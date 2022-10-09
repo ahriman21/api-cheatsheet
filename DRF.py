@@ -71,6 +71,12 @@ def validate_email(self,value):
 	if 'admin' is in value :
 		raise serializers.ValidationError('you can not use admin in your email')
 	return value
+# example 2:
+def validate_email(self,value):
+        email = User.objects.filter(email=value)
+        if email.exists():
+            raise serializers.ValidationError('this email is already exists')
+        return email
 # validate multiple fields in same time :
 def validate(self,data):
 	if data['password1'] not data['password2'] :
