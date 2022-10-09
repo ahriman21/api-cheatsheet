@@ -17,7 +17,10 @@ class QuestionCreateView(APIView):
 	def post(self, request):
 		srz_data = QuestionSerializer(data=request.data)
 		if srz_data.is_valid():
+			# if serializer is ModelSerializer:
 			srz_data.save()
+			# or if the serializer is Not ModelSerializer:
+			Question.objects.create_obj(title = srz_data.validated_data['title'],body = srz_data=validated_data['body'])
 			return Response(srz_data.data, status=status.HTTP_201_CREATED)
 		return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -30,7 +33,10 @@ class QuestionUpdateView(APIView):
 		self.check_object_permissions(request, question)
 		srz_data = QuestionSerializer(instance=question, data=request.data, partial=True)
 		if srz_data.is_valid():
+			# if serializer is ModelSerializer:
 			srz_data.save()
+			# or if the serializer is Not ModelSerializer:
+			#...
 			return Response(srz_data.data, status=status.HTTP_200_OK)
 		return Response(srz_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
