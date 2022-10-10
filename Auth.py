@@ -9,6 +9,7 @@ REST_FRAMEWORK = {
     ]
 }
 
+=> 1
 # ============================ TOKEN AUTHENTICATION ===============================================================
 # to use token authentication we must add 'rest_framework.authtoken' to INSTALLED_APPS and then migrate db .
 ## using django-rest-framework's built in endpoints to provide token of users :
@@ -16,7 +17,7 @@ REST_FRAMEWORK = {
 from rest_framework.authtoken import  import views
 path('api-token-auth/',views.obtain_auth_token,name='api-token')
 
-
+=> 2
 # =============================== JWT ===============================================================================
 # this type of tokens is devided to 3 sections :
 ## 1- HEADER ( algorithm and token type ) => {'alg' : 'HS256', 'typ': 'jwt'}
