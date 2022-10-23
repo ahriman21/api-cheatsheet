@@ -1,4 +1,4 @@
-# The default permission policy may be set globally, using the DEFAULT_PERMISSION_CLASSES setting. For example.
+# The default permission policy may be set globally, using the DEFAULT_PERMISSION_CLASSES setting.
 # Note: when you set new permission classes via the class attribute or decorators you're telling the view to ignore the default list set in the settings.py file.
 
 REST_FRAMEWORK = {
