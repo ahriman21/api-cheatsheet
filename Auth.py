@@ -9,16 +9,61 @@ REST_FRAMEWORK = {
     ]
 }
 
+
+
 => 1
-# ============================ TOKEN AUTHENTICATION ===============================================================
+#==================================================================================================================
+# ============================        TOKEN         ===============================================================
+#============================     AUTHENTICATION    ===============================================================
+#==================================================================================================================
 # to use token authentication we must add 'rest_framework.authtoken' to INSTALLED_APPS and then migrate db .
 ## using django-rest-framework's built in endpoints to provide token of users :
+
+# ============================= OPTION 1 : using built in view.=======================
 
 from rest_framework.authtoken import  import views
 path('api-token-auth/',views.obtain_auth_token,name='api-token')
 
+# ============================== OPTION 2 : manually ==================================
+# serializers.py 
+from django.contrib.auth import authenticate
+from django.utils.translation import gettext as _
+class AuthTokenSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(
+            style={'input_type':'password'},
+            )
+    def validate(self,attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+        user = authenticate(
+            request = self.context.get('reqeust'),
+            username = email
+            password = password
+        )
+        if not user :
+            msg= _('unable to authenticate with provided credentials')
+            raise serializers.ValidationError(msg,code='authorization')
+        attrs['user'] = user
+        return attrs
+    
+# views.py
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
+class CreateTokenView(ObtainAuthToken):
+    serializer_class = AuthTokenSerializer # our custom serializer
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES # nice appearance
+#urls.py 
+path('token/',views.CreateTokenView.as_view(),name='token')
+
+
+
+
 => 2
-# =============================== JWT ===============================================================================
+#====================================================================================================================
+# =============================================   JWT   =============================================================
+#=========================================== AUTHENTICATION  ========================================================
+#====================================================================================================================
 # this type of tokens is devided to 3 sections :
 ## 1- HEADER ( algorithm and token type ) => {'alg' : 'HS256', 'typ': 'jwt'}
 ## 2- PAYLOAD (real data ) ================> {'sub' : '123', name='john',admin='True'}
