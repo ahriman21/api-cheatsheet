@@ -18,10 +18,11 @@ REST_FRAMEWORK = {
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
 
 class ExampleView(APIView):
-    permission_classes = [IsAuthenticated]
-    
+    permission_classes = [IsAuthenticated] # to access this class user must be authenticated.
+    authentication_classes = [TokenAuthentication] # to access this class user must authenticate via token .
 
     # your code ...
 # ==================================================FUNCTION BASED VIEWS===========================================================
