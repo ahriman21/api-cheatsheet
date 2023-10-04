@@ -16,7 +16,17 @@ class TodoPagination(PageNumberPagination):
 2- pagination implementation in views :
 ```
 class TodoListView(generics.ListAPIView):
+    authentication_classes = (JwtAuthentication,)
+    permission_classes = (IsAuthenticated,)
     pagination_class = TodoPagination
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ('title', 'description')
+    filterset_fields = ('is_done',)
+    serializer_class = TodoSerializer
+    queryset = Todo.objects.all()  # Replace YourTodoModel with your actual model name
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
 ```
 
 3- some examples of using pagination in url :
